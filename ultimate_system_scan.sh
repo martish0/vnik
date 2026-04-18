@@ -1038,15 +1038,17 @@ if [ -n "$disk_usage" ] && [ "$disk_usage" -gt 90 ]; then
 fi
 
 # Проверка OOM
-oom_count=$(dmesg 2>/dev/null | grep -c "oom-killer" || echo 0)
-if [ "$oom_count" -gt 0 ]; then
+oom_count=$(dmesg 2>/dev/null | grep -c "oom-killer" 2>/dev/null || echo 0)
+oom_count=${oom_count:-0}
+if [ "$oom_count" -gt 0 ] 2>/dev/null; then
     echo "❌ Обнаружено $oom_count событий OOM Killer"
     ((problem_count++))
 fi
 
 # Проверка segfault
-segfault_count=$(dmesg 2>/dev/null | grep -c "segfault" || echo 0)
-if [ "$segfault_count" -gt 0 ]; then
+segfault_count=$(dmesg 2>/dev/null | grep -c "segfault" 2>/dev/null || echo 0)
+segfault_count=${segfault_count:-0}
+if [ "$segfault_count" -gt 0 ] 2>/dev/null; then
     echo "❌ Обнаружено $segfault_count ошибок сегментации"
     ((problem_count++))
 fi
